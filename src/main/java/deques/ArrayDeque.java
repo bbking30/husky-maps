@@ -159,14 +159,29 @@ public class ArrayDeque<E> implements Deque<E> {
     @SuppressWarnings("unchecked")
     private void resize(int capacity) {
         E[] newData = (E[]) new Object[capacity];
-        int i = increment(front, size);
-        for (int newIndex = 0; newIndex < size; newIndex += 1) {
-            newData[newIndex] = data[i];
-            i = increment(i, size);
+        if (needsDownsize()) {
+            int i = decrement(back, data.length);
+            for (int newIndex = data.length - 1 - (data.length-size); newIndex >=0; newIndex--) {
+                newData[newIndex] = data[i];
+                i = decrement(i, data.length);
+            }
+
+            front = newData.length - 1;
+            back = size;
+            data = newData;
+
+        } else {
+            int i = increment(front, size);
+            for (int newIndex = 0; newIndex < size; newIndex += 1) {
+                newData[newIndex] = data[i];
+                i = increment(i, size);
+            }
+
+            front = newData.length - 1;
+            back = size;
+            data = newData;
         }
-        front = newData.length - 1;
-        back = size;
-        data = newData;
+
     }
 
     /**
