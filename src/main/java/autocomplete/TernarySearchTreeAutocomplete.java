@@ -73,8 +73,7 @@ public class TernarySearchTreeAutocomplete implements Autocomplete {
                 terms.add(prefix.toString() + letter.data);
             }
             collect(letter.left, prefix, terms);
-            collect(letter.mid, prefix.append(letter.data), terms);
-            prefix.deleteCharAt(prefix.length()-1);
+            collect(letter.mid, new StringBuilder(prefix.toString() + letter.data), terms);
             collect(letter.right, prefix, terms);
         }
     }
@@ -84,13 +83,11 @@ public class TernarySearchTreeAutocomplete implements Autocomplete {
         Node letter = getPrefix(overallRoot, prefix, 0);
         if (letter == null) {
             return terms;
+        } else if (letter.isTerm) {
+            terms.add(prefix);
         }
 
         collect(letter.mid, new StringBuilder(prefix), terms);
-
-        if (letter.isTerm) {
-            terms.add(prefix);
-        }
 
         return terms;
     }
