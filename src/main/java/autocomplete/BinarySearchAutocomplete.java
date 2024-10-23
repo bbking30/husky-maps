@@ -27,7 +27,7 @@ public class BinarySearchAutocomplete implements Autocomplete {
     public void addAll(Collection<? extends CharSequence> terms) {
         // TODO: Replace with your code
         elements.addAll(terms);
-        Collections.sort(elements, CharSequence::compare);
+        elements.sort(CharSequence::compare);
         //throw new UnsupportedOperationException("Not implemented yet");
     }
 
@@ -44,8 +44,8 @@ public class BinarySearchAutocomplete implements Autocomplete {
             start = -(start + 1);
         }
 
-        for (int i = start; i < elements.size(); i++) {
-            CharSequence term = elements.get(i);
+        for (int index = start; index < elements.size(); index++) {
+            CharSequence term = elements.get(index);
             if (Autocomplete.isPrefixOf(prefix, term)) {
                 terms.add(term);
             }
