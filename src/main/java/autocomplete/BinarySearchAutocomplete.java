@@ -17,7 +17,7 @@ public class BinarySearchAutocomplete implements Autocomplete {
     private final List<CharSequence> elements;
 
     /**
-     * Constructs an empty instance.
+     * Const#ructs an empty instance.
      */
     public BinarySearchAutocomplete() {
         elements = new ArrayList<>();
@@ -39,16 +39,14 @@ public class BinarySearchAutocomplete implements Autocomplete {
             return terms;
         }
 
-        int start = Collections.binarySearch(elements, prefix, CharSequence::compare);
-        if (start < 0) {
-            start = -(start + 1);
+        int index = Collections.binarySearch(elements, prefix, CharSequence::compare);
+        if (index < 0) {
+            index = -(index + 1);
         }
 
-        for (int index = start; index < elements.size(); index++) {
-            CharSequence term = elements.get(index);
-            if (Autocomplete.isPrefixOf(prefix, term)) {
-                terms.add(term);
-            }
+        while (index < elements.size() && Autocomplete.isPrefixOf(prefix, elements.get(index))) {
+            terms.add(elements.get(index));
+            index++;
         }
 
         return terms;
