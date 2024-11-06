@@ -1,11 +1,11 @@
+import minpq.MinPQ;
+import minpq.OptimizedHeapMinPQ;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 
@@ -38,6 +38,23 @@ public class ReportAnalyzer {
                 .toList();
 
         // TODO: Display the most commonly-reported WCAG recommendations using MinPQ
+        MinPQ<String> organizedList = new OptimizedHeapMinPQ<>();
+
+        for(String tag : wcagTags) {
+            if (!organizedList.contains(tag)) {
+                organizedList.add(tag, -1);
+            } else {
+                organizedList.changePriority(tag, organizedList.getPriority(tag)-1);
+            }
+        }
+
+        String[] results = new String[3];
+
+        for (int i = 0; i < 3; i++) {
+            results[i] = organizedList.removeMin();
+            System.out.println(wcagDefinitions.get(results[i]));
+        }
+
         throw new UnsupportedOperationException();
     }
 }

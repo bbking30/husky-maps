@@ -36,7 +36,10 @@ public class OptimizedHeapMinPQ<E> implements MinPQ<E> {
         elements = new ArrayList<>(elementsAndPriorities.size());
         elementsToIndex = new HashMap<>(elementsAndPriorities.size());
         // TODO: Replace with your code
-        throw new UnsupportedOperationException("Not implemented yet");
+        for (Map.Entry<E, Double> entry : elementsAndPriorities.entrySet()) {
+            add(entry.getKey(), entry.getValue());
+        }
+        //throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
@@ -45,19 +48,24 @@ public class OptimizedHeapMinPQ<E> implements MinPQ<E> {
             throw new IllegalArgumentException("Already contains " + element);
         }
         // TODO: Replace with your code
-        throw new UnsupportedOperationException("Not implemented yet");
+        elements.add(new PriorityNode<E> (element, priority));
+        elementsToIndex.put(element, elements.size()-1);
+        swim(elements.size()-1);
+        //throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public boolean contains(E element) {
         // TODO: Replace with your code
-        throw new UnsupportedOperationException("Not implemented yet");
+        return elementsToIndex.containsKey(element);
+        //throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public double getPriority(E element) {
         // TODO: Replace with your code
-        throw new UnsupportedOperationException("Not implemented yet");
+        return elements.get(elementsToIndex.get(element)).getPriority();
+        //throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
@@ -66,7 +74,8 @@ public class OptimizedHeapMinPQ<E> implements MinPQ<E> {
             throw new NoSuchElementException("PQ is empty");
         }
         // TODO: Replace with your code
-        throw new UnsupportedOperationException("Not implemented yet");
+        return elements.get(1).getElement();
+        //throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
@@ -75,7 +84,17 @@ public class OptimizedHeapMinPQ<E> implements MinPQ<E> {
             throw new NoSuchElementException("PQ is empty");
         }
         // TODO: Replace with your code
-        throw new UnsupportedOperationException("Not implemented yet");
+        E minElement = elements.get(1).getElement();
+        swap(1, elements.size() - 1);
+        elements.remove(elements.size() - 1);
+        elementsToIndex.remove(minElement);
+
+        if (!isEmpty()) {
+            sink(1);
+        }
+
+        return minElement;
+        //throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
@@ -84,12 +103,64 @@ public class OptimizedHeapMinPQ<E> implements MinPQ<E> {
             throw new NoSuchElementException("PQ does not contain " + element);
         }
         // TODO: Replace with your code
-        throw new UnsupportedOperationException("Not implemented yet");
+        int index = elementsToIndex.get(element);
+        double oldPriority = elements.get(index).getPriority();
+        for (PriorityNode<E> currElement : elements) {
+            if (currElement.getElement() == element) {
+                currElement.setPriority(priority);
+            }
+        }
+
+        if (priority < oldPriority) {
+            swim(index);
+        } else {
+            sink(index);
+        }
+        //throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public int size() {
         // TODO: Replace with your code
-        throw new UnsupportedOperationException("Not implemented yet");
+        return elements.size()-1;
+        //throw new UnsupportedOperationException("Not implemented yet");
     }
+
+    private void swim(int index) {
+        while (index > 1 && elements.get(index).getPriority() <
+                elements.get(index / 2).getPriority()) {
+            swap(index, index / 2);
+            index /= 2;
+        }
+    }
+
+    private void sink(int index) {
+        int size = size();
+        int child = 2 * index;
+
+        while (child <= size) {
+            if (child < size && elements.get(child).getPriority() > elements.get(child + 1).getPriority()) {
+                child++;
+            }
+
+            if (elements.get(index).getPriority() <= elements.get(child).getPriority()) {
+                child = size + 1;
+            } else {
+                swap(index, child);
+                index = child;
+                child = 2 * index;
+            }
+        }
+    }
+
+    private void swap(int index1, int index2) {
+        PriorityNode<E> tempNode = elements.get(index1);
+        elements.set(index1, elements.get(index2));
+        elements.set(index2, tempNode);
+
+        elementsToIndex.put(elements.get(index1).getElement(), index1);
+        elementsToIndex.put(elements.get(index2).getElement(), index2);
+    }
+
+
 }

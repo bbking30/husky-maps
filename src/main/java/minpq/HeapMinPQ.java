@@ -42,19 +42,34 @@ public class HeapMinPQ<E> implements MinPQ<E> {
             throw new IllegalArgumentException("Already contains " + element);
         }
         // TODO: Replace with your code
-        throw new UnsupportedOperationException("Not implemented yet");
+        pq.add(new PriorityNode<E> (element, priority));
+        //throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public boolean contains(E element) {
         // TODO: Replace with your code
-        throw new UnsupportedOperationException("Not implemented yet");
+        for (PriorityNode<E> currNode : pq) {
+            if (currNode.getElement() == element) {
+                return true;
+            }
+        }
+
+        return false;
+        //throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public double getPriority(E element) {
         // TODO: Replace with your code
-        throw new UnsupportedOperationException("Not implemented yet");
+        for (PriorityNode<E> currNode : pq) {
+            if (currNode.getElement() == element) {
+                return currNode.getPriority();
+            }
+        }
+
+        return 0;
+        //throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
@@ -63,7 +78,15 @@ public class HeapMinPQ<E> implements MinPQ<E> {
             throw new NoSuchElementException("PQ is empty");
         }
         // TODO: Replace with your code
-        throw new UnsupportedOperationException("Not implemented yet");
+        PriorityNode<E> minNode = pq.peek();
+        for (PriorityNode<E> currElement : pq) {
+            if (currElement.getPriority() < minNode.getPriority()) {
+                minNode = currElement;
+            }
+        }
+
+        return minNode.getElement();
+        //throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
@@ -72,7 +95,18 @@ public class HeapMinPQ<E> implements MinPQ<E> {
             throw new NoSuchElementException("PQ is empty");
         }
         // TODO: Replace with your code
-        throw new UnsupportedOperationException("Not implemented yet");
+        PriorityNode<E> minNode = pq.peek();
+        int minNodeIndex = 0;
+        for (PriorityNode<E> currNode : pq) {
+            if (currNode.getPriority() < minNode.getPriority()) {
+                minNode = currNode;
+            }
+        }
+        E minElement = minNode.getElement();
+        pq.remove(minNode);
+        return minElement;
+
+        //throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
@@ -81,12 +115,18 @@ public class HeapMinPQ<E> implements MinPQ<E> {
             throw new NoSuchElementException("PQ does not contain " + element);
         }
         // TODO: Replace with your code
-        throw new UnsupportedOperationException("Not implemented yet");
+        for (PriorityNode<E> currElement : pq) {
+            if (currElement.getElement() == element) {
+                currElement.setPriority(priority);
+            }
+        }
+        //throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public int size() {
         // TODO: Replace with your code
-        throw new UnsupportedOperationException("Not implemented yet");
+        return pq.size();
+        //throw new UnsupportedOperationException("Not implemented yet");
     }
 }
