@@ -113,7 +113,7 @@ public class OptimizedHeapMinPQ<E> implements MinPQ<E> {
 
         if (priority < oldPriority) {
             swim(index);
-        } else {
+        } else if (priority > oldPriority){
             sink(index);
         }
         //throw new UnsupportedOperationException("Not implemented yet");
@@ -136,21 +136,21 @@ public class OptimizedHeapMinPQ<E> implements MinPQ<E> {
 
     private void sink(int index) {
         int size = size();
-        int child = 2 * index;
+        int childIndex = 2 * index;
 
-        while (child <= size) {
-            if (child < size && elements.get(child).getPriority() >
-                    elements.get(child + 1).getPriority()) {
-                child++;
+        while (childIndex <= size) {
+            if (childIndex < size && elements.get(childIndex).getPriority() >
+                    elements.get(childIndex + 1).getPriority()) {
+                childIndex++;
             }
 
             if (elements.get(index).getPriority() <=
-                    elements.get(child).getPriority()) {
-                child = size + 1;
+                    elements.get(childIndex).getPriority()) {
+                childIndex = size + 1;
             } else {
-                swap(index, child);
-                index = child;
-                child = 2 * index;
+                swap(index, childIndex);
+                index = childIndex;
+                childIndex = 2 * index;
             }
         }
     }

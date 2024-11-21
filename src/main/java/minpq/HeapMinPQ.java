@@ -1,9 +1,6 @@
 package minpq;
 
-import java.util.Comparator;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.PriorityQueue;
+import java.util.*;
 
 /**
  * {@link PriorityQueue} implementation of the {@link MinPQ} interface.
@@ -106,6 +103,7 @@ public class HeapMinPQ<E> implements MinPQ<E> {
         pq.remove(minNode);
         return minElement;
 
+
         //throw new UnsupportedOperationException("Not implemented yet");
     }
 
@@ -115,13 +113,17 @@ public class HeapMinPQ<E> implements MinPQ<E> {
             throw new NoSuchElementException("PQ does not contain " + element);
         }
         // TODO: Replace with your code
-        for (PriorityNode<E> currElement : pq) {
-            if (currElement.getElement() == element) {
-                currElement.setPriority(priority);
-            }
+
+        Iterator<PriorityNode<E>> pqIterator = pq.iterator();
+
+        while (pqIterator.hasNext() && pqIterator.next() != element) {
+           pqIterator.remove();
         }
+
+        pqIterator.next().setPriority(priority);
+
         //throw new UnsupportedOperationException("Not implemented yet");
-    }
+}
 
     @Override
     public int size() {
