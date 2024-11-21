@@ -104,7 +104,7 @@ public abstract class MinPQTests {
                 .toList();
 
         Random rand = new Random();
-        Map<String,Double> randomTags = new HashMap<>();
+        Map<String,Double> randomTags = new TreeMap<>();
         for (int i = 0; i < 10000; i++) {
             String currentTag = wcagTags.get(rand.nextInt(wcagTags.size()));
             if (!randomTags.containsKey(currentTag)) {
@@ -134,9 +134,9 @@ public abstract class MinPQTests {
                 }
             }
         }
+
         MinPQ<String> reference = new DoubleMapMinPQ<>();
         MinPQ<String> testing = createMinPQ();
-        Map<Integer, String> greatestOccurring = new TreeMap<>();
         for (String tag : randomTags.keySet()) {
             String tagTitle = wcagDefinitions.get(tag);
             double count = randomTags.get(tag);
@@ -144,6 +144,25 @@ public abstract class MinPQTests {
             testing.add(tagTitle, count);
         }
 
+        String[]highestCounts = new String[3];
+
+        for (String tag : randomTags.keySet()) {
+            if (highestCounts[2] == null || randomTags.get(tag) > randomTags.get(highestCounts[2])) {
+                highestCounts[0] = highestCounts[1];
+                highestCounts[1] = highestCounts[2];
+                highestCounts[2] = wcagDefinitions.get(tag);
+            } else if (highestCounts[1] == null|| randomTags.get(tag) > randomTags.get(highestCounts[1])) {
+                highestCounts[0] = highestCounts[1];
+                highestCounts[1] = wcagDefinitions.get(tag);
+            } else if (highestCounts[0] == null || randomTags.get(tag) > randomTags.get(highestCounts[0])) {
+                highestCounts[0] = wcagDefinitions.get(tag);
+            }
+        }
+
+        for (int i = 2; i >= 0; i--) {
+            reference.changePriority(highestCounts[i], reference.getPriority(highestCounts[i]) * 3);
+            testing.changePriority(highestCounts[i], reference.getPriority(highestCounts[i]) * 3);
+        }
 
         while (!reference.isEmpty()) {
             assertEquals(reference.removeMin(), testing.removeMin());
