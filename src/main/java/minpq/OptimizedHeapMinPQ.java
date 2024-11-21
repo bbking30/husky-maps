@@ -106,7 +106,7 @@ public class OptimizedHeapMinPQ<E> implements MinPQ<E> {
         int index = elementsToIndex.get(element);
         double oldPriority = elements.get(index).getPriority();
         for (PriorityNode<E> currElement : elements) {
-            if (currElement.getElement() == element) {
+            if (currElement != null &&  currElement.getElement() == element) {
                 currElement.setPriority(priority);
             }
         }
@@ -139,11 +139,13 @@ public class OptimizedHeapMinPQ<E> implements MinPQ<E> {
         int child = 2 * index;
 
         while (child <= size) {
-            if (child < size && elements.get(child).getPriority() > elements.get(child + 1).getPriority()) {
+            if (child < size && elements.get(child).getPriority() >
+                    elements.get(child + 1).getPriority()) {
                 child++;
             }
 
-            if (elements.get(index).getPriority() <= elements.get(child).getPriority()) {
+            if (elements.get(index).getPriority() <=
+                    elements.get(child).getPriority()) {
                 child = size + 1;
             } else {
                 swap(index, child);
