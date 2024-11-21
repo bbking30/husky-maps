@@ -115,11 +115,14 @@ public class UnsortedArrayMinPQ<E> implements MinPQ<E> {
             throw new NoSuchElementException("PQ does not contain " + element);
         }
         // TODO: Replace with your code
-        for (PriorityNode<E> currElement : elements) {
-            if (currElement.getElement() == element) {
-                currElement.setPriority(priority);
-            }
+        int index = 0;
+        PriorityNode<E> currElement = elements.getFirst();
+        while (currElement.getElement() != element && index < elements.size()) {
+            index++;
+            currElement = elements.get(index);
         }
+
+        currElement.setPriority(priority);
         //throw new UnsupportedOperationException("Not implemented yet");
     }
 
@@ -130,3 +133,5 @@ public class UnsortedArrayMinPQ<E> implements MinPQ<E> {
         //throw new UnsupportedOperationException("Not implemented yet");
     }
 }
+
+

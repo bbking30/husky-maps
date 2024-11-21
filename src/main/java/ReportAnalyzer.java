@@ -55,6 +55,6 @@ public class ReportAnalyzer {
             System.out.println(wcagDefinitions.get(results[i]));
         }
 
-        throw new UnsupportedOperationException();
+       // throw new UnsupportedOperationException();
     }
 }
