@@ -76,12 +76,6 @@ public class HeapMinPQ<E> implements MinPQ<E> {
         }
         // TODO: Replace with your code
         PriorityNode<E> minNode = pq.peek();
-        for (PriorityNode<E> currElement : pq) {
-            if (currElement.getPriority() < minNode.getPriority()) {
-                minNode = currElement;
-            }
-        }
-
         return minNode.getElement();
         //throw new UnsupportedOperationException("Not implemented yet");
     }
@@ -92,12 +86,8 @@ public class HeapMinPQ<E> implements MinPQ<E> {
             throw new NoSuchElementException("PQ is empty");
         }
         // TODO: Replace with your code
+
         PriorityNode<E> minNode = pq.peek();
-        for (PriorityNode<E> currNode : pq) {
-            if (currNode.getPriority() < minNode.getPriority()) {
-                minNode = currNode;
-            }
-        }
         E minElement = minNode.getElement();
         pq.remove(minNode);
         return minElement;
