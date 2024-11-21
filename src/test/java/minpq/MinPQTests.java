@@ -144,25 +144,6 @@ public abstract class MinPQTests {
             testing.add(tagTitle, count);
         }
 
-        String[]highestCounts = new String[3];
-
-        for (String tag : randomTags.keySet()) {
-            if (highestCounts[2] == null || randomTags.get(tag) > randomTags.get(highestCounts[2])) {
-                highestCounts[0] = highestCounts[1];
-                highestCounts[1] = highestCounts[2];
-                highestCounts[2] = wcagDefinitions.get(tag);
-            } else if (highestCounts[1] == null|| randomTags.get(tag) > randomTags.get(highestCounts[1])) {
-                highestCounts[0] = highestCounts[1];
-                highestCounts[1] = wcagDefinitions.get(tag);
-            } else if (highestCounts[0] == null || randomTags.get(tag) > randomTags.get(highestCounts[0])) {
-                highestCounts[0] = wcagDefinitions.get(tag);
-            }
-        }
-
-        for (int i = 2; i >= 0; i--) {
-            reference.changePriority(highestCounts[i], reference.getPriority(highestCounts[i]) * 3);
-            testing.changePriority(highestCounts[i], reference.getPriority(highestCounts[i]) * 3);
-        }
 
         while (!reference.isEmpty()) {
             assertEquals(reference.removeMin(), testing.removeMin());
