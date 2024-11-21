@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
+import java.util.TreeSet;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -103,31 +104,46 @@ public abstract class MinPQTests {
                 .toList();
 
         Random rand = new Random();
-        HashMap<String, Integer> randomTags = new HashMap<>();
+        Map<String,Double> randomTags = new HashMap<>();
         for (int i = 0; i < 10000; i++) {
             String currentTag = wcagTags.get(rand.nextInt(wcagTags.size()));
             if (!randomTags.containsKey(currentTag)) {
-                randomTags.put(currentTag, 1);
+                randomTags.put(currentTag, 1.0);
             } else {
                 randomTags.replace(currentTag, randomTags.get(currentTag) + 1);
             }
         }
 
+        Set<Double> priorities = new HashSet<>();
+        priorities.addAll(randomTags.values());
+
+        for (double priority : priorities) {
+            Set<String> matchingPriorities = new TreeSet<>();
+            for (String tag : randomTags.keySet()) {
+                if (randomTags.get(tag) == priority) {
+                    matchingPriorities.add(tag);
+                }
+            }
+            int num = 1;
+            if (matchingPriorities.size() > 1) {
+                Iterator<String> matchIterator = matchingPriorities.iterator();
+                while (matchIterator.hasNext()) {
+                    double originalPriority = randomTags.get(matchIterator.next());
+                    randomTags.put(matchIterator.next(), originalPriority + (num * 0.001));
+                    num++;
+                }
+            }
+        }
         MinPQ<String> reference = new DoubleMapMinPQ<>();
         MinPQ<String> testing = createMinPQ();
-
+        Map<Integer, String> greatestOccurring = new TreeMap<>();
         for (String tag : randomTags.keySet()) {
             String tagTitle = wcagDefinitions.get(tag);
-            int count = randomTags.get(tag);
-            reference.add(tagTitle, -count);
-            testing.add(tagTitle, -count);
+            double count = randomTags.get(tag);
+            reference.add(tagTitle, count);
+            testing.add(tagTitle, count);
         }
 
-        for (int i = 0; i < 3; i++) {
-            String removedReference = reference.removeMin();
-            String removedTesting = testing.removeMin();
-            assertEquals(removedReference, removedTesting);
-        }
 
         while (!reference.isEmpty()) {
             assertEquals(reference.removeMin(), testing.removeMin());

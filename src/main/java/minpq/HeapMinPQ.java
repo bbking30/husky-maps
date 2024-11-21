@@ -93,7 +93,6 @@ public class HeapMinPQ<E> implements MinPQ<E> {
         }
         // TODO: Replace with your code
         PriorityNode<E> minNode = pq.peek();
-        int minNodeIndex = 0;
         for (PriorityNode<E> currNode : pq) {
             if (currNode.getPriority() < minNode.getPriority()) {
                 minNode = currNode;
@@ -114,14 +113,8 @@ public class HeapMinPQ<E> implements MinPQ<E> {
         }
         // TODO: Replace with your code
 
-        Iterator<PriorityNode<E>> pqIterator = pq.iterator();
-
-        while (pqIterator.hasNext() && pqIterator.next() != element) {
-           pqIterator.remove();
-        }
-
-        pqIterator.next().setPriority(priority);
-
+        pq.remove(element);
+        pq.add(new PriorityNode<E> (element, priority));
         //throw new UnsupportedOperationException("Not implemented yet");
 }
 
