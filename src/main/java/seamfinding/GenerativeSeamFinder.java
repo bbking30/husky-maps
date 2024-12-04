@@ -70,7 +70,14 @@ public class GenerativeSeamFinder implements SeamFinder {
             @Override
             public List<Edge<Node>> neighbors(Picture picture, EnergyFunction f) {
                 // TODO: Replace with your code
-                throw new UnsupportedOperationException("Not implemented yet");
+                List<Edge<Node>> pixelNeighbors = new ArrayList<>(picture.height());
+                for (int j = 0; j < picture.height(); j++) {
+                    Pixel neighbor = new Pixel(0, j);
+                    double weight = f.apply(picture, 0, j);
+                    pixelNeighbors.add(new Edge<>(this, neighbor, weight));
+                }
+                return pixelNeighbors;
+                //throw new UnsupportedOperationException("Not implemented yet");
             }
         };
         /**
@@ -80,7 +87,8 @@ public class GenerativeSeamFinder implements SeamFinder {
             @Override
             public List<Edge<Node>> neighbors(Picture picture, EnergyFunction f) {
                 // TODO: Replace with your code
-                throw new UnsupportedOperationException("Not implemented yet");
+                return new ArrayList<>();
+                //throw new UnsupportedOperationException("Not implemented yet");
             }
         };
 
@@ -102,7 +110,8 @@ public class GenerativeSeamFinder implements SeamFinder {
         }
 
         /**
-         * A pixel in the {@link PixelGraph} representation of the {@link Picture} with {@link EnergyFunction}-weighted
+         * A pixel in the {@link PixelGraph} representation of the {@link Picture} with
+         * {@link EnergyFunction}-weighted
          * edges to neighbors.
          *
          * @see PixelGraph
@@ -127,7 +136,23 @@ public class GenerativeSeamFinder implements SeamFinder {
             @Override
             public List<Edge<Node>> neighbors(Picture picture, EnergyFunction f) {
                 // TODO: Replace with your code
-                throw new UnsupportedOperationException("Not implemented yet");
+                List<Edge<Node>> pixelNeighbors = new ArrayList<>();
+                // Ensure that x is not out of bounds
+                if (x + 1 < picture.width()) {
+                    // For non-rightmost pixels, add right-up, right-middle, right-down neighbors
+                    for (int i = y - 1; i <= y + 1; i++) {
+                        if (i >= 0 && i < picture.height()) { // Ensure vertical bounds
+                            Pixel neighbor = new Pixel(x + 1, i);
+                            double weight = f.apply(picture, x + 1, i);
+                            pixelNeighbors.add(new Edge<>(this, neighbor, weight));
+                        }
+                    }
+                } else if (x + 1 == picture.width()) {
+                    return List.of(new Edge<>(this, sink, 0));
+                }
+
+                return pixelNeighbors;
+                //throw new UnsupportedOperationException("Not implemented yet");
             }
 
             @Override

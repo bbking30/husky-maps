@@ -92,7 +92,6 @@ public class OptimizedHeapMinPQ<E> implements MinPQ<E> {
         if (!isEmpty()) {
             sink(1);
         }
-
         return minElement;
         //throw new UnsupportedOperationException("Not implemented yet");
     }
@@ -105,11 +104,7 @@ public class OptimizedHeapMinPQ<E> implements MinPQ<E> {
         // TODO: Replace with your code
         int index = elementsToIndex.get(element);
         double oldPriority = elements.get(index).getPriority();
-        for (PriorityNode<E> currElement : elements) {
-            if (currElement != null &&  currElement.getElement() == element) {
-                currElement.setPriority(priority);
-            }
-        }
+        elements.get(index).setPriority(priority);
 
         if (priority < oldPriority) {
             swim(index);
@@ -163,6 +158,4 @@ public class OptimizedHeapMinPQ<E> implements MinPQ<E> {
         elementsToIndex.put(elements.get(index1).getElement(), index1);
         elementsToIndex.put(elements.get(index2).getElement(), index2);
     }
-
-
 }
