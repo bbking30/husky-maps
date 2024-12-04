@@ -17,7 +17,7 @@ public class DynamicProgrammingSeamFinder implements SeamFinder {
         int width = picture.width();
         int height = picture.height();
         double[][] imagePathWeights = new double[height][width];
-        int[][] backtrack = new int[height][width];
+        int[][] backTrackTraversals = new int[height][width];
 
         for (int row = 0; row < height; row++) {
             imagePathWeights[row][0] = f.apply(picture, 0, row);
@@ -28,34 +28,37 @@ public class DynamicProgrammingSeamFinder implements SeamFinder {
                 double minNeighborEnergy = imagePathWeights[row][col - 1];
                 int minNeighborRow = row;
 
-                if (row > 0 && imagePathWeights[row - 1][col - 1] < minNeighborEnergy) {
+                if (row > 0 && imagePathWeights[row - 1][col - 1]
+                        < minNeighborEnergy) {
                     minNeighborEnergy = imagePathWeights[row - 1][col - 1];
                     minNeighborRow = row - 1;
                 }
 
-                if (row < height - 1 && imagePathWeights[row + 1][col - 1] < minNeighborEnergy) {
+                if (row < height - 1 && imagePathWeights[row + 1][col - 1]
+                        < minNeighborEnergy) {
                     minNeighborEnergy = imagePathWeights[row + 1][col - 1];
                     minNeighborRow = row + 1;
                 }
 
-                imagePathWeights[row][col] = f.apply(picture, col, row) + minNeighborEnergy;
-                backtrack[row][col] = minNeighborRow;
+                imagePathWeights[row][col] = f.apply(picture, col, row)
+                        + minNeighborEnergy;
+                backTrackTraversals[row][col] = minNeighborRow;
             }
         }
 
         double minEnergy = imagePathWeights[0][width - 1];
-        int minRow = 0;
+        int currMinRow = 0;
         for (int row = 1; row < height; row++) {
             if (imagePathWeights[row][width - 1] < minEnergy) {
                 minEnergy = imagePathWeights[row][width - 1];
-                minRow = row;
+                currMinRow = row;
             }
         }
 
         List<Integer> seam = new ArrayList<>();
         for (int col = width - 1; col >= 0; col--) {
-            seam.add(minRow);
-            minRow = backtrack[minRow][col];
+            seam.add(currMinRow);
+            currMinRow = backTrackTraversals[currMinRow][col];
         }
 
         Collections.reverse(seam);
