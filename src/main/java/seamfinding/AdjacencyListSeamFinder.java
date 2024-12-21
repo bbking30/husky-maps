@@ -84,7 +84,7 @@ public class AdjacencyListSeamFinder implements SeamFinder {
         private final Node sink = new Node() {
             @Override
             public List<Edge<Node>> neighbors(Picture picture, EnergyFunction f) {
-                return List.of(); // Sink has no neighbors
+                return List.of();
             }
         };
 

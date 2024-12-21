@@ -137,18 +137,16 @@ public class GenerativeSeamFinder implements SeamFinder {
             public List<Edge<Node>> neighbors(Picture picture, EnergyFunction f) {
                 // TODO: Replace with your code
                 List<Edge<Node>> pixelNeighbors = new ArrayList<>();
-                // Ensure that x is not out of bounds
                 if (x + 1 < picture.width()) {
-                    // For non-rightmost pixels, add right-up, right-middle, right-down neighbors
                     for (int i = y - 1; i <= y + 1; i++) {
-                        if (i >= 0 && i < picture.height()) { // Ensure vertical bounds
+                        if (i >= 0 && i < picture.height()) {
                             Pixel neighbor = new Pixel(x + 1, i);
                             double weight = f.apply(picture, x + 1, i);
                             pixelNeighbors.add(new Edge<>(this, neighbor, weight));
                         }
                     }
-                } else if (x + 1 == picture.width()) {
-                    return List.of(new Edge<>(this, sink, 0));
+                } else {
+                    pixelNeighbors.add(new Edge<>(this, sink, 0));
                 }
 
                 return pixelNeighbors;

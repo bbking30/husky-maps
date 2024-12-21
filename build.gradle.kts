@@ -36,3 +36,7 @@ tasks.withType<Test> {
     testLogging.showStandardStreams = true
     testLogging.showExceptions = true
 }
+
+tasks.jar {
+    manifest.attributes["Main-Class"] = "MapServer"
+}

@@ -23,42 +23,43 @@ public class DynamicProgrammingSeamFinder implements SeamFinder {
             imagePathWeights[row][0] = f.apply(picture, 0, row);
         }
 
-        for (int col = 1; col < width; col++) {
+        for (int column = 1; column < width; column++) {
             for (int row = 0; row < height; row++) {
-                double minNeighborEnergy = imagePathWeights[row][col - 1];
+                double minNeighborEnergy = imagePathWeights[row][column - 1];
                 int minNeighborRow = row;
 
-                if (row > 0 && imagePathWeights[row - 1][col - 1]
+                if (row > 0 && imagePathWeights[row - 1][column - 1]
                         < minNeighborEnergy) {
-                    minNeighborEnergy = imagePathWeights[row - 1][col - 1];
+                    minNeighborEnergy = imagePathWeights[row - 1][column - 1];
                     minNeighborRow = row - 1;
                 }
 
-                if (row < height - 1 && imagePathWeights[row + 1][col - 1]
+                if (row < height - 1 && imagePathWeights[row + 1][column - 1]
                         < minNeighborEnergy) {
-                    minNeighborEnergy = imagePathWeights[row + 1][col - 1];
+                    minNeighborEnergy = imagePathWeights[row + 1][column - 1];
                     minNeighborRow = row + 1;
                 }
 
-                imagePathWeights[row][col] = f.apply(picture, col, row)
+                imagePathWeights[row][column] = f.apply(picture, column, row)
                         + minNeighborEnergy;
-                backTrackTraversals[row][col] = minNeighborRow;
+                backTrackTraversals[row][column] = minNeighborRow;
             }
         }
 
         double minEnergy = imagePathWeights[0][width - 1];
         int currMinRow = 0;
-        for (int row = 1; row < height; row++) {
-            if (imagePathWeights[row][width - 1] < minEnergy) {
-                minEnergy = imagePathWeights[row][width - 1];
-                currMinRow = row;
-            }
-        }
-
         List<Integer> seam = new ArrayList<>();
-        for (int col = width - 1; col >= 0; col--) {
+
+        for (int column = width - 1; column >= 0; column--) {
+            for (int row = 1; row < height; row++) {
+                if (imagePathWeights[row][width - 1] < minEnergy) {
+                    minEnergy = imagePathWeights[row][column];
+                    currMinRow = row;
+                }
+            }
+
             seam.add(currMinRow);
-            currMinRow = backTrackTraversals[currMinRow][col];
+            currMinRow = backTrackTraversals[currMinRow][column];
         }
 
         Collections.reverse(seam);
@@ -67,3 +68,5 @@ public class DynamicProgrammingSeamFinder implements SeamFinder {
         //throw new UnsupportedOperationException("Not implemented yet");
     }
 }
+
+
